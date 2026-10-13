@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Usuario - Sistema de Control de Inventarios ESTi</title>
+    <style>
+        :root {
+            --primary: #1e40af;
+            --primary-light: #3b82f6;
+            --primary-bg: #eff6ff;
+            --secondary: #0f172a;
+            --success: #059669;
+            --success-bg: #ecfdf5;
+            --warning: #d97706;
+            --warning-bg: #fffbeb;
+            --danger: #dc2626;
+            --danger-bg: #fef2f2;
+            --slate-50: #f8fafc;
+            --slate-100: #f1f5f9;
+            --slate-200: #e2e8f0;
+            --slate-300: #cbd5e1;
+            --slate-600: #475569;
+            --slate-700: #334155;
+            --slate-800: #1e293b;
+            --slate-900: #0f172a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            color: var(--slate-800);
+            background-color: #f8fafc;
+            font-size: 11.5px;
+            line-height: 1.42;
+            -webkit-font-smoothing: antialiased;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* CONFIGURACIÓN DE IMPRESIÓN Y PÁGINA A4 */
+        @page {
+            size: A4 portrait;
+            margin: 10mm 12mm 10mm 12mm;
+        }
+
+        .page {
+            max-width: 210mm;
+            margin: 0 auto 30px auto;
+            background: #ffffff;
+            padding: 16mm 14mm;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            position: relative;
+            min-height: 297mm;
+        }
+
+        @media print {
+            body {
+                background: none;
+            }
+            .page {
+                margin: 0;
+                padding: 0;
+                box-shadow: none;
+                max-width: 100%;
+                min-height: auto;
+                page-break-after: always;
+                break-after: page;
+            }
+            .page:last-child {
+                page-break-after: avoid;
+                break-after: avoid;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+
+        /* PORTADA */
+        .cover-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 235mm;
+            padding: 10px 0;
+        }
+
+        .cover-header {
+            border-bottom: 2px solid var(--slate-100);
+            padding-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .cover-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--primary-bg);
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 10.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid #bfdbfe;
+        }
+
+        .cover-body {
+            margin: 25px 0;
+        }
+
+        .cover-title {
+            font-size: 30px;
+            font-weight: 800;
+            color: var(--slate-900);
+            line-height: 1.15;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .cover-title span {
+            color: var(--primary-light);
+        }
+
+        .cover-subtitle {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--slate-600);
+            margin-bottom: 20px;
+            line-height: 1.35;
+        }
+
+        .cover-hero-card {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #3b82f6 100%);
+            color: white;
+            padding: 22px 26px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(30, 58, 138, 0.25);
+            margin: 18px 0 24px 0;
+        }
+
+        .cover-hero-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .cover-hero-card p {
+            font-size: 12px;
+            color: #dbeafe;
+            line-height: 1.5;
+        }
+
+        .cover-meta-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            background: var(--slate-50);
+            border: 1px solid var(--slate-200);
+            border-radius: 12px;
+            padding: 14px 18px;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .meta-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--slate-600);
+            margin-bottom: 2px;
+        }
+
+        .meta-value {
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--slate-900);
+        }
+
+        .cover-footer {
+            border-top: 2px solid var(--slate-100);
+            padding-top: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 10.5px;
+            color: var(--slate-600);
+        }
+
+        /* ENCABEZADOS DE SECCIÓN */
+        h2.section-title {
+            font-size: 16.5px;
+            font-weight: 800;
+            color: var(--slate-900);
+            border-bottom: 2px solid var(--primary-bg);
+            padding-bottom: 6px;
+            margin-top: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h2.section-title .section-num {
+            background: var(--primary);
+            color: white;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 5px;
+        }
+
+        h3.subsection-title {
+            font-size: 12.8px;
+            font-weight: 700;
+            color: var(--slate-800);
+            margin-top: 8px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        h4 {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--slate-700);
+            margin-top: 8px;
+            margin-bottom: 3px;
+        }
+
+        p {
+            margin-bottom: 6px;
+            color: var(--slate-700);
+            font-size: 11.5px;
+        }
+
+        /* TABLAS ESTILIZADAS */
+        table.doc-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 6px 0 8px 0;
+            font-size: 10.5px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--slate-200);
+        }
+
+        table.doc-table th {
+            background: var(--slate-100);
+            color: var(--slate-900);
+            font-weight: 700;
+            text-align: left;
+            padding: 6px 9px;
+            border-bottom: 1px solid var(--slate-200);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        table.doc-table td {
+            padding: 5px 9px;
+            border-bottom: 1px solid var(--slate-100);
+            color: var(--slate-700);
+            vertical-align: top;
+        }
+
+        table.doc-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        table.doc-table tr:nth-child(even) td {
+            background: #fafafa;
+        }
+
+        /* ALERTAS / CAJAS DE INFORMACIÓN */
+        .callout {
+            border-radius: 10px;
+            padding: 8px 12px;
+            margin: 8px 0;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            font-size: 11px;
+            line-height: 1.45;
+        }
+
+        .callout-icon {
+            flex-shrink: 0;
+            width: 18px;
+            height: 18px;
+            margin-top: 1px;
+        }
+
+        .callout.info {
+            background: var(--primary-bg);
+            border: 1px solid #bfdbfe;
+            color: #1e3a8a;
+        }
+
+        .callout.success {
+            background: var(--success-bg);
+            border: 1px solid #a7f3d0;
+            color: #065f46;
+        }
+
+        .callout.warning {
+            background: var(--warning-bg);
+            border: 1px solid #fde68a;
+            color: #92400e;
+        }
+
+        .callout.danger {
+            background: var(--danger-bg);
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+
+        /* PASO A PASO */
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin: 6px 0;
+        }
+
+        .step-card {
+            background: #ffffff;
+            border: 1px solid var(--slate-200);
+            border-radius: 8px;
+            padding: 6px 10px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .step-num {
+            background: var(--primary);
+            color: white;
+            font-weight: 800;
+            font-size: 11px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .step-content h5 {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--slate-900);
+            margin-bottom: 1px;
+        }
+
+        .step-content p {
+            margin: 0;
+            font-size: 11px;
+            color: var(--slate-600);
+        }
+
+        /* TARJETAS DE CARACTERÍSTICAS / GRID */
+        .card-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin: 6px 0;
+        }
+
+        .feature-card {
+            background: var(--slate-50);
+            border: 1px solid var(--slate-200);
+            border-radius: 8px;
+            padding: 8px 10px;
+        }
+
+        .feature-card h4 {
+            margin-top: 0;
+            font-size: 11.5px;
+            color: var(--slate-900);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .feature-card p {
+            font-size: 11px;
+            margin-bottom: 0;
+            color: var(--slate-600);
+        }
+
+        /* BADGES */
+        .badge {
+            display: inline-block;
+            font-size: 9.5px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .badge-blue { background: #dbeafe; color: #1e40af; }
+        .badge-green { background: #d1fae5; color: #065f46; }
+        .badge-amber { background: #fef3c7; color: #92400e; }
+        .badge-red { background: #fee2e2; color: #991b1b; }
+        .badge-mono { font-family: 'Consolas', 'Courier New', monospace; font-size: 10px; }
+
+        /* HEADER & FOOTER DE PÁGINA INTERNA */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--slate-200);
+            padding-bottom: 6px;
+            margin-bottom: 8px;
+            font-size: 9.5px;
+            color: var(--slate-600);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .page-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--slate-200);
+            padding-top: 6px;
+            margin-top: 12px;
+            font-size: 9.5px;
+            color: var(--slate-600);
+        }
+
+        /* ÍNDICE */
+        .toc-list {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .toc-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 7px 0;
+            border-bottom: 1px dotted var(--slate-300);
+            font-size: 13px;
+        }
+
+        .toc-title {
+            font-weight: 600;
+            color: var(--slate-800);
+        }
+
+        .toc-dots {
+            flex: 1;
+            border-bottom: 1px dotted var(--slate-300);
+            margin: 0 8px;
+        }
+
+        .toc-page {
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        code, .code-pill {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--slate-100);
+            color: #be185d;
+            padding: 1px 5px;
+            border-radius: 4px;
+            font-size: 11.5px;
+            border: 1px solid var(--slate-200);
+        }
+
+        /* MOCKUP UI */
+        .ui-mockup {
+            background: #ffffff;
+            border: 1px solid var(--slate-200);
+            border-radius: 12px;
+            padding: 12px;
+            margin: 10px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .ui-mockup-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--slate-50);
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid var(--slate-200);
+            font-size: 11.5px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============================================================
+         PÁGINA 1: PORTADA OFICIAL
+         ============================================================ -->
+    <div class="page cover-page">
+        <div>
+            <div class="cover-header">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #2563eb, #4f46e5); display: flex; align-items: center; justify-content: center; color: white;">
+                        <svg style="width: 20px; height: 20px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div style="font-weight: 800; font-size: 14px; letter-spacing: -0.3px; color: var(--slate-900);">CONTROL DE INVENTARIOS ESTI</div>
+                        <div style="font-size: 11px; color: var(--slate-600);">Gestión Digital de Catálogo, Entradas y Salidas</div>
+                    </div>
+                </div>
+                <div class="cover-badge">
+                    <span>Versión 2.1 Oficial</span>
+                </div>
+            </div>
+
+            <div class="cover-body">
+                <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--primary); margin-bottom: 8px;">
+                    DOCUMENTACIÓN TÉCNICA Y OPERATIVA
+                </div>
+                <h1 class="cover-title">
+                    Manual de Usuario <span>Integral</span>
+                </h1>
+                <p class="cover-subtitle">
+                    Guía completa de operación, administración de catálogo, control de flujos de almacén y sincronización en la nube para la plataforma institucional ESTi.
+                </p>
+
+                <div class="cover-hero-card">
+                    <h3>Propósito del Sistema</h3>
+                    <p>
+                        Esta solución web progresiva (PWA) permite gestionar de forma ágil, exacta y segura los movimientos de almacén, suministros e insumos institucionales. Conectada de manera bidireccional y en tiempo real a Google Sheets mediante microservicios en Google Apps Script, elimina pérdidas de información y facilita la trazabilidad inmediata de cada artículo.
+                    </p>
+                </div>
+
+                <div class="cover-meta-grid">
+                    <div class="meta-item">
+                        <span class="meta-label">Desarrollado Por</span>
+                        <span class="meta-value">Daniel Camilo Garcia Galicia</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Entorno Operativo</span>
+                        <span class="meta-value">Prácticas Profesionales • ESTi</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Tecnología Base</span>
+                        <span class="meta-value">HTML5 • Tailwind CSS • PWA • Sheets API</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Vigencia y Actualización</span>
+                        <span class="meta-value">Año 2026 • Versión 2.1 Estable</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cover-footer">
+            <span>© 2026 Gestor de Inventarios ESTi • Confidencial y de Uso Interno</span>
+            <span>Manual del Operador y Administrador</span>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         PÁGINA 2: ÍNDICE GENERAL Y RESUMEN EJECUTIVO
+         ============================================================ -->
+    <div class="page">
+        <div class="page-header">
+            <span>GESTOR DE INVENTARIOS ESTI • MANUAL DE USUARIO</span>
+            <span>ÍNDICE Y RESUMEN</span>
+        </div>
+
+        <h2 class="section-title">
+            <span class="section-num">0</span>
+            Índice de Contenido
+        </h2>
+
+        <ul class="toc-list">
+            <li class="toc-item">
+                <span class="toc-title">1. Introducción, Objetivos y Requisitos del Sistema</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">Pág. 3</span>
+            </li>
+            <li class="toc-item">
+                <span class="toc-title">2. Interfaz General y Barra Superior (Navbar)</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">Pág. 4</span>
+            </li>
+            <li class="toc-item">
+                <span class="toc-title">3. Módulo 1: Registro de Salidas de Material</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">Pág. 5</span>
+            </li>
+            <li class="toc-item">
+                <span class="toc-title">4. Módulo 1: Registro de Entradas de Material</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">Pág. 6</span>
+            </li>
+            <li class="toc-item">
+                <span class="toc-title">5. Módulo 2: Gestión de Catálogo (Agregar y Modificar)</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">Pág. 7</span>
+            </li>
+            <li class="toc-item">
+                <span class="toc-title">6. Módulo 2: Eliminación Segura y Modal de Confirmación</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">Pág. 8</span>
+            </li>
+            <li class="toc-item">
+                <span class="toc-title">7. Arquitectura Técnica y Conexión con Google Sheets</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">Pág. 9</span>
+            </li>
+            <li class="toc-item">
+                <span class="toc-title">8. Preguntas Frecuentes, Errores Comunes y Soporte</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">Pág. 10</span>
+            </li>
+        </ul>
+
+        <h2 class="section-title" style="margin-top: 24px;">
+            <span class="section-num">★</span>
+            Resumen Ejecutivo del Sistema
+        </h2>
+        <p>
+            El <strong>Gestor de Inventarios ESTi</strong> ha sido diseñado para sustituir registros manuales en papel o manipulaciones directas sobre hojas de cálculo, proporcionando una interfaz moderna, responsiva, amigable y protegida contra errores de captura.
+        </p>
+
+        <div class="card-grid-2">
+            <div class="feature-card">
+                <h4>
+                    <span style="color: var(--primary);">⚡</span> Conexión en la Nube en Tiempo Real
+                </h4>
+                <p>
+                    Toda acción realizada en el sistema (entradas, salidas, altas, ediciones o bajas) se sincroniza directamente con el libro maestro en Google Sheets sin necesidad de guardar archivos locales ni recargar la página.
+                </p>
+            </div>
+            <div class="feature-card">
+                <h4>
+                    <span style="color: var(--success);">🛡️</span> Cero Errores de Código
+                </h4>
+                <p>
+                    Gracias al sistema de autocompletado reactivo, los códigos de producto (formato institucional ESTi) se asignan de modo automático y bloqueado para impedir discrepancias tipográficas.
+                </p>
+            </div>
+            <div class="feature-card">
+                <h4>
+                    <span style="color: #6366f1;">👥</span> Separación por Tipo de Personal
+                </h4>
+                <p>
+                    Permite clasificar con un solo clic si el material es entregado a personal de <strong>Intendencia</strong> (lista rápida) o a personal docente y administrativo de <strong>Tiempos Completos</strong> (con buscador interactivo).
+                </p>
+            </div>
+            <div class="feature-card">
+                <h4>
+                    <span style="color: #0284c7;">📱</span> Compatibilidad PWA (App Móvil / PC)
+                </h4>
+                <p>
+                    Implementa Service Worker y Web Manifest, lo que permite instalar la aplicación directamente en la pantalla de inicio de teléfonos celulares, tablets o en el escritorio de Windows.
+                </p>
+            </div>
+        </div>
+
+        <div class="callout info">
+            <svg class="callout-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+                <strong>Nota Importante:</strong> El sistema opera sobre estándares web modernos y no requiere instalación de software propietario. Basta con abrir el archivo <code>index.html</code> en Google Chrome, Microsoft Edge, Mozilla Firefox o Safari.
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Control de Inventarios ESTi</span>
+            <span>Página 2 de 10</span>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         PÁGINA 3: INTRODUCCIÓN, OBJETIVOS Y REQUISITOS
+         ============================================================ -->
+    <div class="page">
+        <div class="page-header">
+            <span>GESTOR DE INVENTARIOS ESTI • MANUAL DE USUARIO</span>
+            <span>CAPÍTULO 1 • INTRODUCCIÓN Y REQUISITOS</span>
+        </div>
+
+        <h2 class="section-title">
+            <span class="section-num">1</span>
+            Introducción, Objetivos y Requisitos Técnicos
+        </h2>
+
+        <h3 class="subsection-title">1.1 Introducción</h3>
+        <p>
+            El control de insumos y recursos materiales en centros educativos y de formación técnica demanda precisión, transparencia y agilidad. El presente sistema automatiza los procesos del almacén central de <strong>ESTi</strong>, garantizando que cada pieza que ingresa o egresa quede asentada de inmediato con su responsable, fecha y cantidad.
+        </p>
+
+        <h3 class="subsection-title">1.2 Objetivos Principales</h3>
+        <ul style="margin-left: 20px; margin-bottom: 14px; color: var(--slate-700);">
+            <li style="margin-bottom: 6px;"><strong>Control de Stock en Tiempo Real:</strong> Conocer al instante la cantidad de piezas y existencias en la hoja principal <code>INVENTARIO</code>.</li>
+            <li style="margin-bottom: 6px;"><strong>Agilidad en Ventanilla de Entrega:</strong> Registrar la salida de artículos en menos de 10 segundos gracias al autocompletado y selección guiada de empleados.</li>
+            <li style="margin-bottom: 6px;"><strong>Mantenimiento Autónomo de Catálogo:</strong> Permitir al encargado dar de alta nuevos productos, corregir descripciones o retirar artículos obsoletos sin tocar las fórmulas de Excel.</li>
+            <li style="margin-bottom: 6px;"><strong>Auditoría Clara:</strong> Registro histórico con fecha, tipo de personal, destinatario y observaciones específicas.</li>
+        </ul>
+
+        <h3 class="subsection-title">1.3 Requisitos del Sistema y Dispositivos</h3>
+        <table class="doc-table">
+            <thead>
+                <tr>
+                    <th style="width: 28%;">Componente</th>
+                    <th style="width: 40%;">Requisito Recomendado</th>
+                    <th style="width: 32%;">Compatibilidad Mínima</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Navegadores Web</strong></td>
+                    <td>Google Chrome v100+, Microsoft Edge v100+, Safari 15+</td>
+                    <td>Cualquier navegador compatible con ES6 y Fetch API</td>
+                </tr>
+                <tr>
+                    <td><strong>Dispositivos</strong></td>
+                    <td>Computadoras de escritorio, Laptops, Tablets Android/iPad, Smartphones</td>
+                    <td>Diseño 100% responsivo adaptable a pantallas desde 360px</td>
+                </tr>
+                <tr>
+                    <td><strong>Conexión a Internet</strong></td>
+                    <td>Banda ancha fija o red móvil 4G/5G para sincronización con Google Sheets</td>
+                    <td>Requiere acceso al dominio <code>script.google.com</code></td>
+                </tr>
+                <tr>
+                    <td><strong>Instalación PWA</strong></td>
+                    <td>Instalable con 1 clic como app nativa de escritorio o móvil</td>
+                    <td>Opcional (puede utilizarse directamente en navegador)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 class="subsection-title">1.4 Instalación como Aplicación (PWA)</h3>
+        <p>
+            El sistema cuenta con manifiesto de aplicación web (<code>manifest.json</code>) y Service Worker (<code>sw.js</code>). Esto permite instalar el sistema como si fuera un programa independiente:
+        </p>
+
+        <div class="steps-container">
+            <div class="step-card">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                    <h5>En Google Chrome o Microsoft Edge (Computadora)</h5>
+                    <p>Haz clic en el ícono de pantalla con flecha (<strong>"Instalar aplicación"</strong>) ubicado en el extremo derecho de la barra de direcciones del navegador.</p>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                    <h5>En Celulares y Tablets (Android / iOS)</h5>
+                    <p>Abre el menú de opciones del navegador (tres puntos o botón compartir) y pulsa sobre <strong>"Agregar a la pantalla principal"</strong>.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Control de Inventarios ESTi</span>
+            <span>Página 3 de 10</span>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         PÁGINA 4: INTERFAZ GENERAL Y NAVBAR
+         ============================================================ -->
+    <div class="page">
+        <div class="page-header">
+            <span>GESTOR DE INVENTARIOS ESTI • MANUAL DE USUARIO</span>
+            <span>CAPÍTULO 2 • ESTRUCTURA VISUAL Y NAVBAR</span>
+        </div>
+
+        <h2 class="section-title">
+            <span class="section-num">2</span>
+            Interfaz General y Barra de Monitoreo (Navbar)
+        </h2>
+
+        <p>
+            La interfaz de usuario ha sido concebida bajo los principios de máxima legibilidad, ergonomía visual y accesibilidad. Todo el contenido está organizado en dos grandes bloques operativos accesibles simultáneamente en pantallas amplias o apilados en dispositivos móviles.
+        </p>
+
+        <h3 class="subsection-title">2.1 Barra Superior (Navbar Sticky)</h3>
+        <p>
+            Ubicada de forma permanente en la parte superior, la barra de navegación permite verificar de un vistazo la salud y el estado del sistema en todo momento:
+        </p>
+
+        <div class="ui-mockup">
+            <div class="ui-mockup-header">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div style="width: 22px; height: 22px; border-radius: 6px; background: #2563eb; color: white; display: flex; align-items: center; justify-content: center; font-size: 11px;">📦</div>
+                    <span style="color: var(--slate-900);">GESTOR DE INVENTARIOS ESTI</span>
+                </div>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <span class="badge badge-blue">Total en catálogo: 148 artículos</span>
+                    <span class="badge badge-green">🟢 Google Sheets Conectado</span>
+                    <span class="badge badge-blue">📄 Manual de Usuario</span>
+                </div>
+            </div>
+            <div style="font-size: 11.5px; color: var(--slate-600); padding: 4px;">
+                Vista simulada de los componentes del Navbar interactivo.
+            </div>
+        </div>
+
+        <table class="doc-table">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Elemento</th>
+                    <th style="width: 25%;">Identificador UI</th>
+                    <th style="width: 50%;">Función y Comportamiento</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Identidad Visual</strong></td>
+                    <td>Logo e Isotipo</td>
+                    <td>Muestra el nombre oficial de la plataforma y el rol del sistema dentro de la institución.</td>
+                </tr>
+                <tr>
+                    <td><strong>Contador de Catálogo</strong></td>
+                    <td><code>#contadorProductos</code></td>
+                    <td>Muestra la cantidad total de artículos registrados actualmente en la base de datos de Google Sheets (ej: <em>"148 artículos"</em>). Se actualiza automáticamente tras altas o bajas.</td>
+                </tr>
+                <tr>
+                    <td><strong>Indicador de Conexión</strong></td>
+                    <td>Insignia verde con pulso</td>
+                    <td>Informa que la pasarela de Google Apps Script está en línea y lista para procesar transacciones.</td>
+                </tr>
+                <tr>
+                    <td><strong>Acceso al Manual</strong></td>
+                    <td>Botón de PDF</td>
+                    <td>Permite a cualquier usuario abrir o descargar el presente documento oficial en formato PDF en una nueva pestaña.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 class="subsection-title">2.2 Organización del Área de Trabajo (2 Columnas)</h3>
+        <div class="card-grid-2">
+            <div class="feature-card" style="border-left: 4px solid var(--primary);">
+                <h4 style="color: var(--primary);">Columna 1: Registro de Movimientos (7 cols)</h4>
+                <p>
+                    Ubicada a la izquierda en computadoras. Es el módulo de mayor frecuencia de uso. Contiene dos pestañas:
+                </p>
+                <ul style="margin: 6px 0 0 16px; font-size: 11.5px; color: var(--slate-700);">
+                    <li><strong>📤 Salida de Material:</strong> Entrega a intendentes o maestros.</li>
+                    <li><strong>📥 Entrada de Material:</strong> Reabastecimiento de piezas al almacén.</li>
+                </ul>
+            </div>
+            <div class="feature-card" style="border-left: 4px solid #6366f1;">
+                <h4 style="color: #6366f1;">Columna 2: Gestión de Catálogo (5 cols)</h4>
+                <p>
+                    Ubicada a la derecha en computadoras. Permite administrar la hoja maestra de productos:
+                </p>
+                <ul style="margin: 6px 0 0 16px; font-size: 11.5px; color: var(--slate-700);">
+                    <li><strong>➕ Agregar:</strong> Dar de alta nuevos insumos.</li>
+                    <li><strong>✏️ Modificar:</strong> Editar códigos, descripciones o empaque.</li>
+                    <li><strong>🗑️ Eliminar:</strong> Quitar productos con modal seguro.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Control de Inventarios ESTi</span>
+            <span>Página 4 de 10</span>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         PÁGINA 5: MÓDULO 1 - REGISTRO DE SALIDAS DE MATERIAL
+         ============================================================ -->
+    <div class="page">
+        <div class="page-header">
+            <span>GESTOR DE INVENTARIOS ESTI • MANUAL DE USUARIO</span>
+            <span>CAPÍTULO 3 • SALIDA DE MATERIAL</span>
+        </div>
+
+        <h2 class="section-title">
+            <span class="section-num">3</span>
+            Módulo 1: Registro de Salida de Material
+        </h2>
+
+        <p>
+            El formulario de <strong>Salida de Material</strong> se utiliza cada vez que un trabajador de intendencia, docente o empleado de tiempo completo solicita y retira productos del almacén para sus labores.
+        </p>
+
+        <h3 class="subsection-title">3.1 Procedimiento de Registro Paso a Paso</h3>
+
+        <div class="steps-container">
+            <div class="step-card">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                    <h5>Verificar Fecha del Movimiento</h5>
+                    <p>El sistema asigna por defecto la fecha actual de forma automática. Si estás capturando un vale de salida extemporáneo, puedes hacer clic sobre el calendario y elegir el día correspondiente.</p>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                    <h5>Buscar la Descripción del Producto</h5>
+                    <p>Empieza a escribir el nombre del artículo en el campo <em>"Descripción del Producto"</em>. Aparecerá una lista predictiva con las coincidencias del catálogo. Selecciona el artículo deseado.</p>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                    <h5>Comprobación Automática de Código</h5>
+                    <p>El campo <em>"Código"</em> se llenará al instante de forma automática (ej. <code>ESTi-ZO266</code>). Este campo está protegido contra escritura para garantizar la coherencia con la base de datos.</p>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-num">4</div>
+                <div class="step-content">
+                    <h5>Seleccionar Tipo de Personal (Intendente vs. Tiempos Completos)</h5>
+                    <p>Haz clic en el botón correspondiente. Verás cómo cambia el selector de empleados y las opciones disponibles.</p>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-num">5</div>
+                <div class="step-content">
+                    <h5>Elegir el Empleado Receptor e Ingresar Cantidad</h5>
+                    <p>Selecciona la persona que recibe el material e indica el número de unidades en el campo <em>"Cantidad"</em> (mínimo 1).</p>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-num">6</div>
+                <div class="step-content">
+                    <h5>Observaciones y Guardar</h5>
+                    <p>Opcionalmente escribe notas (área asignada, motivo especial) y presiona <strong>"Guardar Registro de Salida"</strong>. El sistema enviará los datos y mostrará un mensaje verde de éxito.</p>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="subsection-title">3.2 Detalle del Selector de Tipo de Personal</h3>
+        <table class="doc-table">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Modalidad</th>
+                    <th style="width: 35%;">Descripción del Personal</th>
+                    <th style="width: 40%;">Comportamiento en Pantalla</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="badge badge-blue">Intendente</span></td>
+                    <td>Personal de intendencia y mantenimiento (11 trabajadores predeterminados).</td>
+                    <td>Muestra una lista desplegable directa con los 11 nombres en mayúsculas (Hermelinda, Maika, Lili, Diego, Anita, Ricardo, Oscar, Jesus, Gabriela, Cynthia, Enrique).</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-blue">Tiempos Completos</span></td>
+                    <td>Docentes, profesores y personal académico de tiempo completo (50+ maestros).</td>
+                    <td>Despliega automáticamente una barra de búsqueda <em>"Filtrar por nombre o apellido..."</em> para localizar al maestro al instante mientras se teclea.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout warning">
+            <svg class="callout-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <div>
+                <strong>Validación de Código:</strong> Si escribes manualmente una descripción que no existe en el catálogo, el campo Código permanecerá vacío. El botón de guardar te alertará con el mensaje: <em>"Selecciona un producto válido de la lista"</em>.
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Control de Inventarios ESTi</span>
+            <span>Página 5 de 10</span>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         PÁGINA 6: MÓDULO 1 - REGISTRO DE ENTRADAS DE MATERIAL
+         ============================================================ -->
+    <div class="page">
+        <div class="page-header">
+            <span>GESTOR DE INVENTARIOS ESTI • MANUAL DE USUARIO</span>
+            <span>CAPÍTULO 4 • ENTRADA DE MATERIAL</span>
+        </div>
+
+        <h2 class="section-title">
+            <span class="section-num">4</span>
+            Módulo 1: Registro de Entrada de Material
+        </h2>
+
+        <p>
+            El módulo de <strong>Entrada de Material</strong> permite reabastecer el stock disponible en el almacén cuando se reciben pedidos de proveedores, donaciones o partidas presupuestales de insumos.
+        </p>
+
+        <h3 class="subsection-title">4.1 ¿Cómo Funciona la Entrada en la Hoja de Inventario?</h3>
+        <p>
+            A diferencia de una simple bitácora, este módulo está programado para interactuar matemáticamente con la columna <strong>"Piezas" (Celda E)</strong> de la hoja <code>INVENTARIO</code> en Google Sheets:
+        </p>
+
+        <div class="ui-mockup" style="background: var(--success-bg); border-color: #a7f3d0;">
+            <div style="font-size: 12.5px; color: #065f46; font-weight: 600;">
+                📥 <strong>Fórmula de Reabastecimiento Automático:</strong>
+            </div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #047857; margin-top: 4px;">
+                Existencia Actual en Celda E + Nuevas Piezas Ingresadas = Nuevo Total de Stock
+            </div>
+        </div>
+
+        <h3 class="subsection-title">4.2 Procedimiento de Captura de Entrada</h3>
+
+        <div class="steps-container">
+            <div class="step-card">
+                <div class="step-num" style="background: var(--success);">1</div>
+                <div class="step-content">
+                    <h5>Activar la Pestaña "Entrada de Material"</h5>
+                    <p>En el selector superior de la primera columna, pulsa el botón verde <strong>"📥 Entrada de Material"</strong>.</p>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-num" style="background: var(--success);">2</div>
+                <div class="step-content">
+                    <h5>Localizar el Producto</h5>
+                    <p>Escribe en <em>"Descripción del Producto"</em>. La lista inteligente te sugerirá los artículos registrados en el catálogo.</p>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-num" style="background: var(--success);">3</div>
+                <div class="step-content">
+                    <h5>Comprobar Autocompletado del Código</h5>
+                    <p>El código institucional se mostrará de inmediato en el campo de solo lectura (ej: <code>ESTi-JA112</code>).</p>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-num" style="background: var(--success);">4</div>
+                <div class="step-content">
+                    <h5>Ingresar "Piezas que Entran"</h5>
+                    <p>Escribe la cantidad exacta de unidades recibidas (número entero positivo, por ejemplo: <code>24</code>).</p>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-num" style="background: var(--success);">5</div>
+                <div class="step-content">
+                    <h5>Confirmar con "Registrar Entrada al Inventario"</h5>
+                    <p>Al hacer clic en el botón verde, la aplicación envía los datos al servidor de Google, suma las piezas en la celda correspondiente y actualiza la memoria local del catálogo.</p>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="subsection-title">4.3 Campos del Formulario de Entrada</h3>
+        <table class="doc-table">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Campo</th>
+                    <th style="width: 15%;">Tipo</th>
+                    <th style="width: 15%;">Obligatorio</th>
+                    <th style="width: 45%;">Descripción y Reglas</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Descripción del Producto</strong></td>
+                    <td>Texto (Datalist)</td>
+                    <td><span class="badge badge-red">Sí</span></td>
+                    <td>Debe coincidir con un artículo existente en el catálogo para recuperar su código y fila exacta.</td>
+                </tr>
+                <tr>
+                    <td><strong>Código</strong></td>
+                    <td>Texto (Readonly)</td>
+                    <td><span class="badge badge-blue">Auto</span></td>
+                    <td>Se genera de modo automático. Si está en blanco no se permite el envío.</td>
+                </tr>
+                <tr>
+                    <td><strong>Piezas que Entran</strong></td>
+                    <td>Numérico entero</td>
+                    <td><span class="badge badge-red">Sí</span></td>
+                    <td>Valor numérico mayor a cero (mínimo 1). No admite números negativos ni decimales.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout success">
+            <svg class="callout-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+                <strong>Retroalimentación Inmediata:</strong> Al completarse el proceso, el sistema limpia los campos automáticamente y muestra el aviso de confirmación: <em>"¡Entrada registrada con éxito en celda E!"</em> durante 3.5 segundos.
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Control de Inventarios ESTi</span>
+            <span>Página 6 de 10</span>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         PÁGINA 7: MÓDULO 2 - GESTIÓN DE CATÁLOGO (AGREGAR Y MODIFICAR)
+         ============================================================ -->
+    <div class="page">
+        <div class="page-header">
+            <span>GESTOR DE INVENTARIOS ESTI • MANUAL DE USUARIO</span>
+            <span>CAPÍTULO 5 • ADMINISTRACIÓN DE CATÁLOGO</span>
+        </div>
+
+        <h2 class="section-title">
+            <span class="section-num">5</span>
+            Módulo 2: Gestión de Catálogo (Agregar y Modificar)
+        </h2>
+
+        <p>
+            El catálogo es la columna vertebral del sistema. Define todos los artículos, códigos y unidades de medida registrados en la hoja <code>INVENTARIO</code>. La segunda columna de la aplicación permite gestionar el ciclo de vida de los productos.
+        </p>
+
+        <h3 class="subsection-title">5.1 Pestaña "Agregar" (Alta de Nuevo Producto)</h3>
+        <p>
+            Utiliza esta función para registrar insumos que nunca antes habían existido en el inventario:
+        </p>
+
+        <table class="doc-table">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Campo</th>
+                    <th style="width: 20%;">Formato Sugerido</th>
+                    <th style="width: 15%;">Requerido</th>
+                    <th style="width: 40%;">Finalidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Código del Producto</strong></td>
+                    <td><code>ESTi-XX000</code></td>
+                    <td><span class="badge badge-red">Obligatorio</span></td>
+                    <td>Identificador alfanumérico único e irrepetible del insumo.</td>
+                </tr>
+                <tr>
+                    <td><strong>Descripción</strong></td>
+                    <td>Mayúsculas (ej: <code>JABON ZOTE</code>)</td>
+                    <td><span class="badge badge-red">Obligatorio</span></td>
+                    <td>Nombre comercial o técnico del artículo. El sistema lo convierte automáticamente a mayúsculas.</td>
+                </tr>
+                <tr>
+                    <td><strong>Existencia</strong></td>
+                    <td>Texto (ej: <code>3 CAJAS</code>)</td>
+                    <td><span class="badge badge-amber">Opcional</span></td>
+                    <td>Presentación en bultos, cajas, paquetes o galones.</td>
+                </tr>
+                <tr>
+                    <td><strong>Piezas</strong></td>
+                    <td>Número (ej: <code>12</code>)</td>
+                    <td><span class="badge badge-amber">Opcional</span></td>
+                    <td>Unidades individuales totales contenidas.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout info">
+            <svg class="callout-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+                Al pulsar <strong>"Agregar al inventario"</strong>, la fila se inserta en Google Sheets y el catálogo local se actualiza en memoria, aumentando el contador superior de artículos.
+            </div>
+        </div>
+
+        <h3 class="subsection-title" style="margin-top: 18px;">5.2 Pestaña "Modificar" (Edición de Artículos Existentes)</h3>
+        <p>
+            Sirve para corregir errores ortográficos, actualizar códigos o modificar las existencias base:
+        </p>
+
+        <div class="steps-container">
+            <div class="step-card">
+                <div class="step-num" style="background: var(--warning);">1</div>
+                <div class="step-content">
+                    <h5>Seleccionar Producto a Editar</h5>
+                    <p>Haz clic en el menú desplegable <em>"Seleccionar Producto a Editar"</em> y escoge el artículo.</p>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-num" style="background: var(--warning);">2</div>
+                <div class="step-content">
+                    <h5>Carga Automática de Datos</h5>
+                    <p>El sistema rellenará de inmediato los campos de Código, Descripción, Existencia y Piezas con los valores vigentes guardados en el servidor.</p>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-num" style="background: var(--warning);">3</div>
+                <div class="step-content">
+                    <h5>Editar y Guardar</h5>
+                    <p>Modifica los campos necesarios y pulsa el botón naranja <strong>"Modificar Producto"</strong>. Si cambiaste el código, el sistema mantendrá la referencia correcta mediante el parámetro interno <code>codigo_viejo</code>.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Control de Inventarios ESTi</span>
+            <span>Página 7 de 10</span>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         PÁGINA 8: MÓDULO 2 - ELIMINACIÓN SEGURA Y MODAL
+         ============================================================ -->
+    <div class="page">
+        <div class="page-header">
+            <span>GESTOR DE INVENTARIOS ESTI • MANUAL DE USUARIO</span>
+            <span>CAPÍTULO 6 • ELIMINACIÓN SEGURA DE ARTÍCULOS</span>
+        </div>
+
+        <h2 class="section-title">
+            <span class="section-num">6</span>
+            Módulo 2: Eliminación Segura y Modal de Confirmación
+        </h2>
+
+        <p>
+            Eliminar un artículo de la base de datos es una operación de alto impacto, ya que borra la fila correspondiente en la hoja <code>INVENTARIO</code>. Por esta razón, el sistema incorpora un <strong>mecanismo de doble validación con ventana modal emergente</strong> que impide pérdidas accidentales de datos.
+        </p>
+
+        <h3 class="subsection-title">6.1 Flujo de Eliminación Controlada</h3>
+
+        <div class="steps-container">
+            <div class="step-card">
+                <div class="step-num" style="background: var(--danger);">1</div>
+                <div class="step-content">
+                    <h5>Seleccionar la Pestaña "Eliminar"</h5>
+                    <p>Accede a la pestaña con el icono de papelera <strong>"🗑️ Eliminar"</strong> en la columna derecha.</p>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-num" style="background: var(--danger);">2</div>
+                <div class="step-content">
+                    <h5>Elegir el Artículo</h5>
+                    <p>Despliega la lista <em>"Seleccionar Producto a Eliminar"</em> y elige el artículo que se desea dar de baja.</p>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-num" style="background: var(--danger);">3</div>
+                <div class="step-content">
+                    <h5>Apertura del Modal de Seguridad</h5>
+                    <p>Al hacer clic en el botón rojo <strong>"Eliminar Producto"</strong>, el formulario <strong>NO</strong> borra de inmediato; en su lugar, se bloquea la pantalla con un fondo difuminado y aparece el cuadro de diálogo de confirmación.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="ui-mockup" style="border: 2px dashed #fca5a5; background: #fff5f5; text-align: center; padding: 20px;">
+            <div style="font-size: 32px; margin-bottom: 6px;">⚠️</div>
+            <div style="font-weight: 800; font-size: 15px; color: var(--danger);">¿Eliminar producto?</div>
+            <p style="font-size: 12px; color: var(--slate-600); margin: 6px auto; max-width: 400px;">
+                Estás a punto de eliminar definitivamente el producto:
+            </p>
+            <div style="display: inline-block; background: #fee2e2; color: #991b1b; padding: 6px 16px; border-radius: 8px; font-weight: 700; font-family: 'JetBrains Mono', monospace; font-size: 13px; margin-bottom: 12px; border: 1px solid #fecaca;">
+                ESTi-ZO266 - JABON ZOTE
+            </div>
+            <p style="font-size: 11px; color: var(--slate-600); margin-bottom: 16px;">
+                Esta acción no se puede deshacer en tu hoja de Excel.
+            </p>
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <span class="badge" style="background: #e2e8f0; color: #334155; padding: 6px 14px; font-size: 11px;">[ Cancelar ]</span>
+                <span class="badge" style="background: #dc2626; color: white; padding: 6px 14px; font-size: 11px;">[ Sí, eliminar ]</span>
+            </div>
+        </div>
+
+        <h3 class="subsection-title">6.2 Métodos para Cancelar la Eliminación</h3>
+        <p>Para proteger al operador en caso de error o duda, existen 3 formas de cancelar el proceso:</p>
+        <ul style="margin-left: 20px; font-size: 12.5px; color: var(--slate-700);">
+            <li>Hacer clic en el botón gris <strong>"Cancelar"</strong> dentro del modal.</li>
+            <li>Hacer clic en la <strong>"X"</strong> ubicada en la esquina superior derecha del cuadro.</li>
+            <li>Presionar la tecla <kbd style="background: var(--slate-200); padding: 2px 6px; border-radius: 4px; font-size: 11px;">ESC</kbd> en el teclado físico o tocar cualquier parte oscura fuera de la tarjeta.</li>
+        </ul>
+
+        <div class="callout danger">
+            <svg class="callout-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <div>
+                <strong>Irreversibilidad:</strong> Una vez confirmado con el botón <em>"Sí, eliminar"</em>, la fila se elimina definitivamente de Google Sheets. Si necesitas recuperarlo, deberás volver a darlo de alta en la pestaña <em>Agregar</em> o restaurarlo desde el historial de versiones del propio Google Drive.
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Control de Inventarios ESTi</span>
+            <span>Página 8 de 10</span>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         PÁGINA 9: ARQUITECTURA TÉCNICA Y GOOGLE SHEETS
+         ============================================================ -->
+    <div class="page">
+        <div class="page-header">
+            <span>GESTOR DE INVENTARIOS ESTI • MANUAL DE USUARIO</span>
+            <span>CAPÍTULO 7 • ARQUITECTURA Y GOOGLE SHEETS</span>
+        </div>
+
+        <h2 class="section-title">
+            <span class="section-num">7</span>
+            Arquitectura Técnica y Conexión con Google Sheets
+        </h2>
+
+        <p>
+            El sistema se compone de una arquitectura sin servidor (Serverless) altamente eficiente, dividida entre una interfaz de cliente web y un backend en la nube de Google.
+        </p>
+
+        <h3 class="subsection-title">7.1 Diagrama de Flujo de Datos</h3>
+        <div class="ui-mockup" style="background: var(--slate-50); padding: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; text-align: center; gap: 8px;">
+                <div style="flex: 1; background: white; padding: 10px; border-radius: 8px; border: 1px solid var(--slate-200);">
+                    <div style="font-size: 16px;">💻</div>
+                    <div style="font-weight: 700; font-size: 11px;">Cliente Web / PWA</div>
+                    <div style="font-size: 9.5px; color: var(--slate-500);">app.js + index.html</div>
+                </div>
+                <div style="color: var(--primary); font-weight: 800; font-size: 14px;">⇄ POST / GET ⇄</div>
+                <div style="flex: 1; background: white; padding: 10px; border-radius: 8px; border: 1px solid var(--slate-200);">
+                    <div style="font-size: 16px;">⚙️</div>
+                    <div style="font-weight: 700; font-size: 11px;">Google Apps Script</div>
+                    <div style="font-size: 9.5px; color: var(--slate-500);">Web App Exec Endpoint</div>
+                </div>
+                <div style="color: var(--success); font-weight: 800; font-size: 14px;">⇄ API ⇄</div>
+                <div style="flex: 1; background: white; padding: 10px; border-radius: 8px; border: 1px solid var(--slate-200);">
+                    <div style="font-size: 16px;">📊</div>
+                    <div style="font-weight: 700; font-size: 11px;">Google Sheets</div>
+                    <div style="font-size: 9.5px; color: var(--slate-500);">Hojas 'INVENTARIO' / 'Salidas'</div>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="subsection-title">7.2 Acciones Procesadas por el Backend</h3>
+        <table class="doc-table">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Acción (Action)</th>
+                    <th style="width: 15%;">Método HTTP</th>
+                    <th style="width: 60%;">Impacto en el Libro de Google Sheets</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>(default / sin action)</code></td>
+                    <td><code>GET</code></td>
+                    <td>Consulta todas las filas de la hoja <code>INVENTARIO</code> y devuelve el catálogo completo en formato JSON con código, descripción, existencia y piezas.</td>
+                </tr>
+                <tr>
+                    <td><code>obtener_tiempos_completos</code></td>
+                    <td><code>GET</code></td>
+                    <td>Consulta la pestaña <code>tiempos completos</code> para poblar dinámicamente la lista de docentes y profesores en el formulario de salidas.</td>
+                </tr>
+                <tr>
+                    <td><code>registrar_movimiento</code></td>
+                    <td><code>POST</code></td>
+                    <td>Inserta una nueva fila en la hoja de bitácora de salidas con: Fecha, Código, Descripción, Empleado, Cantidad y Observaciones.</td>
+                </tr>
+                <tr>
+                    <td><code>registrar_entrada</code></td>
+                    <td><code>POST</code></td>
+                    <td>Ubica la fila del producto por su código y adiciona la cantidad numérica a la columna <strong>E</strong> de la hoja <code>INVENTARIO</code>.</td>
+                </tr>
+                <tr>
+                    <td><code>agregar_producto</code></td>
+                    <td><code>POST</code></td>
+                    <td>Agrega un nuevo registro al final del catálogo de productos.</td>
+                </tr>
+                <tr>
+                    <td><code>modificar_producto</code></td>
+                    <td><code>POST</code></td>
+                    <td>Busca por <code>codigo_viejo</code> y reemplaza los valores de las celdas de la fila respectiva.</td>
+                </tr>
+                <tr>
+                    <td><code>eliminar_producto</code></td>
+                    <td><code>POST</code></td>
+                    <td>Elimina físicamente la fila del artículo del libro maestro.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 class="subsection-title">7.3 Seguridad y Privacidad</h3>
+        <p>
+            El script de Apps Script está configurado con permisos institucionales que garantizan que las solicitudes se procesen sin exponer las credenciales personales de los operadores. La comunicación siempre se realiza a través de canales cifrados HTTPS / SSL.
+        </p>
+
+        <div class="page-footer">
+            <span>Control de Inventarios ESTi</span>
+            <span>Página 9 de 10</span>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         PÁGINA 10: PREGUNTAS FRECUENTES, ERRORES Y FICHA TÉCNICA
+         ============================================================ -->
+    <div class="page">
+        <div class="page-header">
+            <span>GESTOR DE INVENTARIOS ESTI • MANUAL DE USUARIO</span>
+            <span>CAPÍTULO 8 • PREGUNTAS FRECUENTES Y SOPORTE</span>
+        </div>
+
+        <h2 class="section-title">
+            <span class="section-num">8</span>
+            Preguntas Frecuentes, Solución de Problemas y Créditos
+        </h2>
+
+        <h3 class="subsection-title">8.1 Preguntas Frecuentes (FAQ)</h3>
+
+        <div style="margin-bottom: 12px;">
+            <p style="font-weight: 700; color: var(--slate-900); margin-bottom: 2px;">
+                ¿Qué hago si al seleccionar un producto no aparece el código?
+            </p>
+            <p style="font-size: 12px; color: var(--slate-600); margin-bottom: 10px;">
+                Esto ocurre cuando el texto escrito en la descripción no coincide exactamente con ninguno de los nombres del catálogo. Borra el texto y selecciona la opción directamente de la lista desplegable que aparece al escribir.
+            </p>
+        </div>
+
+        <div style="margin-bottom: 12px;">
+            <p style="font-weight: 700; color: var(--slate-900); margin-bottom: 2px;">
+                ¿Por qué el indicador dice "Error al cargar los datos del servidor"?
+            </p>
+            <p style="font-size: 12px; color: var(--slate-600); margin-bottom: 10px;">
+                Verifica tu conexión a internet o comprueba si la red institucional tiene bloqueado el dominio <code>script.google.com</code>. Si la conexión se interrumpió temporalmente, recarga la página (<kbd>F5</kbd> o <kbd>Ctrl+R</kbd>).
+            </p>
+        </div>
+
+        <div style="margin-bottom: 12px;">
+            <p style="font-weight: 700; color: var(--slate-900); margin-bottom: 2px;">
+                ¿Puedo usar el sistema en varios equipos a la vez?
+            </p>
+            <p style="font-size: 12px; color: var(--slate-600); margin-bottom: 10px;">
+                Sí. Al estar respaldado por la nube de Google, múltiples operadores pueden consultar y registrar movimientos desde diferentes computadoras o teléfonos en simultáneo sin generar conflictos de archivo bloqueado.
+            </p>
+        </div>
+
+        <h3 class="subsection-title">8.2 Matriz de Solución de Problemas (Troubleshooting)</h3>
+        <table class="doc-table">
+            <thead>
+                <tr>
+                    <th style="width: 30%;">Síntoma o Mensaje</th>
+                    <th style="width: 35%;">Causa Probable</th>
+                    <th style="width: 35%;">Solución Recomendada</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>El botón dice <em>"Guardando..."</em> pero no termina.</td>
+                    <td>Latencia alta en el servicio de Google Apps Script.</td>
+                    <td>Espera 5 segundos. El sistema cuenta con control de tiempo de espera y reactivará el botón si detecta interrupción.</td>
+                </tr>
+                <tr>
+                    <td>No encuentro a un maestro de tiempo completo.</td>
+                    <td>El nombre tiene acentos o un orden distinto de apellidos.</td>
+                    <td>Utiliza la casilla de filtro escribiendo solo una palabra clave de su primer nombre o apellido.</td>
+                </tr>
+                <tr>
+                    <td>Los cambios en el catálogo no se ven reflejados.</td>
+                    <td>Caché antigua del navegador.</td>
+                    <td>Presiona <kbd>Ctrl</kbd> + <kbd>F5</kbd> para forzar la actualización limpia del Service Worker.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="ui-mockup" style="background: linear-gradient(to right, #f8fafc, #edf2f7); border-left: 4px solid var(--primary); margin-top: 18px; padding: 16px;">
+            <h4 style="margin: 0 0 6px 0; color: var(--slate-900); font-size: 13px;">Ficha Técnica y Créditos del Proyecto</h4>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; font-size: 11.5px; color: var(--slate-700);">
+                <div><strong>Proyecto:</strong> Sistema de Control de Inventarios ESTi</div>
+                <div><strong>Versión:</strong> 2.1 (Producción)</div>
+                <div><strong>Desarrollador:</strong> Daniel Camilo Garcia Galicia</div>
+                <div><strong>Año de Edición:</strong> 2026</div>
+                <div><strong>Marco Institucional:</strong> Prácticas Profesionales ESTi</div>
+                <div><strong>Formato de Documento:</strong> Manual de Usuario PDF / HTML5</div>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Control de Inventarios ESTi • Realizado por Daniel Camilo Garcia Galicia</span>
+            <span>Página 10 de 10 • Fin del Manual</span>
+        </div>
+    </div>
+
+</body>
+
+</html>
