@@ -1,0 +1,9 @@
+{
+  "name": "sistema-control-inventarios",
+  "version": "1.0.0",
+  "description": "Sistema de Control de Inventarios ESTi",
+  "scripts": {
+    "manual:pdf": "node scripts/generate_pdf.js"
+  },
+  "private": true
+}
