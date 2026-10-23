@@ -17,32 +17,185 @@ function cargarCatalogo() {
         });
 }
 
+// Función utilitaria para normalizar texto (sin tildes, minúsculas, espacios)
+function normalizarTexto(texto) {
+    return (texto || '')
+        .toString()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+}
+
 // 2. ACTUALIZAR VISUALMENTE LAS LISTAS EN EL HTML
 function actualizarListasUI() {
     const dataList = document.getElementById('listaProductos');
-    const selectEdit = document.getElementById('selectEdit');
-    const selectDel = document.getElementById('selectDel');
 
-    dataList.innerHTML = '';
-    selectEdit.innerHTML = '<option value="">-- Selecciona un producto --</option>';
-    selectDel.innerHTML = '<option value="">-- Selecciona un producto --</option>';
+    if (dataList) {
+        dataList.innerHTML = '';
+        catalogoProductos.sort((a, b) => a.descripcion.localeCompare(b.descripcion));
+        catalogoProductos.forEach(item => {
+            let opt = document.createElement('option');
+            opt.value = item.descripcion;
+            dataList.appendChild(opt);
+        });
+    }
 
-    catalogoProductos.sort((a, b) => a.descripcion.localeCompare(b.descripcion));
+    const filtroEdit = document.getElementById('filtroModificar')?.value || '';
+    actualizarSelectEdit(filtroEdit);
 
-    catalogoProductos.forEach(item => {
-        let opt = document.createElement('option');
-        opt.value = item.descripcion;
-        dataList.appendChild(opt);
-
-        let selectOpt = document.createElement('option');
-        selectOpt.value = item.codigo;
-        selectOpt.text = `${item.codigo} - ${item.descripcion}`;
-        selectEdit.appendChild(selectOpt.cloneNode(true));
-        selectDel.appendChild(selectOpt);
-    });
+    const filtroDel = document.getElementById('filtroEliminar')?.value || '';
+    actualizarSelectDel(filtroDel);
 
     const contador = document.getElementById('contadorProductos');
     if (contador) contador.textContent = `${catalogoProductos.length} artículos`;
+}
+
+// 2.1 ACTUALIZAR Y FILTRAR SELECT EN "MODIFICAR"
+function actualizarSelectEdit(filtro = '') {
+    const selectEdit = document.getElementById('selectEdit');
+    const badge = document.getElementById('badgeFiltroEdit');
+    const btnLimpiar = document.getElementById('btnLimpiarFiltroEdit');
+    if (!selectEdit) return;
+
+    const valorPrevio = selectEdit.value;
+    const filtroNorm = normalizarTexto(filtro);
+
+    const filtrados = filtroNorm
+        ? catalogoProductos.filter(p => {
+            const codNorm = normalizarTexto(p.codigo);
+            const descNorm = normalizarTexto(p.descripcion);
+            return codNorm.includes(filtroNorm) || descNorm.includes(filtroNorm);
+        })
+        : catalogoProductos;
+
+    selectEdit.innerHTML = '';
+
+    const defaultOpt = document.createElement('option');
+    defaultOpt.value = '';
+    if (filtroNorm) {
+        defaultOpt.textContent = filtrados.length > 0
+            ? `-- Selecciona un producto (${filtrados.length} encontrados) --`
+            : `-- Sin coincidencias con "${filtro.trim()}" --`;
+    } else {
+        defaultOpt.textContent = '-- Selecciona un producto --';
+    }
+    selectEdit.appendChild(defaultOpt);
+
+    filtrados.forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = item.codigo;
+        opt.textContent = `${item.codigo} - ${item.descripcion}`;
+        selectEdit.appendChild(opt);
+    });
+
+    if (btnLimpiar) {
+        if (filtro.trim().length > 0) {
+            btnLimpiar.classList.remove('hidden');
+        } else {
+            btnLimpiar.classList.add('hidden');
+        }
+    }
+
+    if (badge) {
+        if (filtroNorm) {
+            badge.textContent = `${filtrados.length} de ${catalogoProductos.length}`;
+            badge.classList.remove('hidden');
+        } else {
+            badge.classList.add('hidden');
+        }
+    }
+
+    if (valorPrevio && filtrados.some(p => p.codigo === valorPrevio)) {
+        selectEdit.value = valorPrevio;
+    } else if (filtrados.length === 1 && filtroNorm) {
+        selectEdit.value = filtrados[0].codigo;
+        cargarDatosModificar(filtrados[0].codigo);
+    } else {
+        selectEdit.value = '';
+        if (valorPrevio) {
+            limpiarCamposModificar();
+        }
+    }
+}
+
+// 2.2 ACTUALIZAR Y FILTRAR SELECT EN "ELIMINAR"
+function actualizarSelectDel(filtro = '') {
+    const selectDel = document.getElementById('selectDel');
+    const badge = document.getElementById('badgeFiltroDel');
+    const btnLimpiar = document.getElementById('btnLimpiarFiltroDel');
+    if (!selectDel) return;
+
+    const valorPrevio = selectDel.value;
+    const filtroNorm = normalizarTexto(filtro);
+
+    const filtrados = filtroNorm
+        ? catalogoProductos.filter(p => {
+            const codNorm = normalizarTexto(p.codigo);
+            const descNorm = normalizarTexto(p.descripcion);
+            return codNorm.includes(filtroNorm) || descNorm.includes(filtroNorm);
+        })
+        : catalogoProductos;
+
+    selectDel.innerHTML = '';
+
+    const defaultOpt = document.createElement('option');
+    defaultOpt.value = '';
+    if (filtroNorm) {
+        defaultOpt.textContent = filtrados.length > 0
+            ? `-- Selecciona un producto (${filtrados.length} encontrados) --`
+            : `-- Sin coincidencias con "${filtro.trim()}" --`;
+    } else {
+        defaultOpt.textContent = '-- Selecciona un producto --';
+    }
+    selectDel.appendChild(defaultOpt);
+
+    filtrados.forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = item.codigo;
+        opt.textContent = `${item.codigo} - ${item.descripcion}`;
+        selectDel.appendChild(opt);
+    });
+
+    if (btnLimpiar) {
+        if (filtro.trim().length > 0) {
+            btnLimpiar.classList.remove('hidden');
+        } else {
+            btnLimpiar.classList.add('hidden');
+        }
+    }
+
+    if (badge) {
+        if (filtroNorm) {
+            badge.textContent = `${filtrados.length} de ${catalogoProductos.length}`;
+            badge.classList.remove('hidden');
+        } else {
+            badge.classList.add('hidden');
+        }
+    }
+
+    if (valorPrevio && filtrados.some(p => p.codigo === valorPrevio)) {
+        selectDel.value = valorPrevio;
+    } else if (filtrados.length === 1 && filtroNorm) {
+        selectDel.value = filtrados[0].codigo;
+    } else {
+        selectDel.value = '';
+    }
+}
+
+function cargarDatosModificar(codigo) {
+    const p = catalogoProductos.find(p => String(p.codigo).trim() === String(codigo).trim());
+    document.getElementById('editCodigo').value = p ? p.codigo : '';
+    document.getElementById('editDesc').value = p ? p.descripcion : '';
+    document.getElementById('editExistencia').value = p ? (p.existencia ?? '') : '';
+    document.getElementById('editPiezas').value = p ? (p.piezas ?? '') : '';
+}
+
+function limpiarCamposModificar() {
+    document.getElementById('editCodigo').value = '';
+    document.getElementById('editDesc').value = '';
+    document.getElementById('editExistencia').value = '';
+    document.getElementById('editPiezas').value = '';
 }
 
 // 2.1 GESTIÓN DE PERSONAL (INTENDENTES / TIEMPOS COMPLETOS)
@@ -494,11 +647,7 @@ document.getElementById('btnAgregar').addEventListener('click', function () {
 
 // Cargar datos en Modificar
 document.getElementById('selectEdit').addEventListener('change', function () {
-    const p = catalogoProductos.find(p => p.codigo === this.value);
-    document.getElementById('editCodigo').value = p ? p.codigo : '';
-    document.getElementById('editDesc').value = p ? p.descripcion : '';
-    document.getElementById('editExistencia').value = p ? (p.existencia ?? '') : '';
-    document.getElementById('editPiezas').value = p ? (p.piezas ?? '') : '';
+    cargarDatosModificar(this.value);
 });
 
 // Modificar
@@ -525,10 +674,10 @@ document.getElementById('btnModificar').addEventListener('click', function () {
     const boton = this;
     enviarPeticionCatalogo(data, boton, 'Modificar Producto', () => {
         document.getElementById('selectEdit').value = '';
-        document.getElementById('editCodigo').value = '';
-        document.getElementById('editDesc').value = '';
-        document.getElementById('editExistencia').value = '';
-        document.getElementById('editPiezas').value = '';
+        limpiarCamposModificar();
+        const fMod = document.getElementById('filtroModificar');
+        if (fMod) fMod.value = '';
+        actualizarSelectEdit('');
     });
 });
 
@@ -598,6 +747,9 @@ btnConfirmarEliminar.addEventListener('click', function () {
     cerrarModalEliminar();
     enviarPeticionCatalogo(data, btn, 'Eliminar Producto', () => {
         document.getElementById('selectDel').value = '';
+        const fDel = document.getElementById('filtroEliminar');
+        if (fDel) fDel.value = '';
+        actualizarSelectDel('');
     });
 });
 
@@ -626,6 +778,15 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
                 content.classList.add('hidden');
             }
         });
+
+        // Foco automático en el filtro o campo correspondiente
+        if (targetId === 'tab-modificar') {
+            setTimeout(() => document.getElementById('filtroModificar')?.focus(), 50);
+        } else if (targetId === 'tab-eliminar') {
+            setTimeout(() => document.getElementById('filtroEliminar')?.focus(), 50);
+        } else if (targetId === 'tab-agregar') {
+            setTimeout(() => document.getElementById('newCodigo')?.focus(), 50);
+        }
     });
 });
 
@@ -666,5 +827,69 @@ const inputFiltroTC = document.getElementById('filtroEmpleadoTC');
 if (inputFiltroTC) {
     inputFiltroTC.addEventListener('input', function () {
         actualizarSelectPersonal(this.value);
+    });
+}
+
+// 12. FILTROS DE BÚSQUEDA EN "MODIFICAR" Y "ELIMINAR" PRODUCTOS
+const inputFiltroModificar = document.getElementById('filtroModificar');
+if (inputFiltroModificar) {
+    inputFiltroModificar.addEventListener('input', function () {
+        actualizarSelectEdit(this.value);
+    });
+    inputFiltroModificar.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const select = document.getElementById('selectEdit');
+            if (select && select.options.length > 1) {
+                if (!select.value && select.options[1].value) {
+                    select.value = select.options[1].value;
+                    cargarDatosModificar(select.value);
+                }
+                document.getElementById('editCodigo')?.focus();
+            }
+        }
+    });
+}
+
+const btnLimpiarFiltroEdit = document.getElementById('btnLimpiarFiltroEdit');
+if (btnLimpiarFiltroEdit) {
+    btnLimpiarFiltroEdit.addEventListener('click', function () {
+        const input = document.getElementById('filtroModificar');
+        if (input) {
+            input.value = '';
+            actualizarSelectEdit('');
+            input.focus();
+        }
+    });
+}
+
+const inputFiltroEliminar = document.getElementById('filtroEliminar');
+if (inputFiltroEliminar) {
+    inputFiltroEliminar.addEventListener('input', function () {
+        actualizarSelectDel(this.value);
+    });
+    inputFiltroEliminar.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const select = document.getElementById('selectDel');
+            if (select && select.options.length > 1) {
+                if (!select.value && select.options[1].value) {
+                    select.value = select.options[1].value;
+                }
+                document.getElementById('btnEliminar')?.focus();
+            }
+        }
+    });
+}
+
+const btnLimpiarFiltroDel = document.getElementById('btnLimpiarFiltroDel');
+if (btnLimpiarFiltroDel) {
+    btnLimpiarFiltroDel.addEventListener('click', function () {
+        const input = document.getElementById('filtroEliminar');
+        if (input) {
+            input.value = '';
+            actualizarSelectDel('');
+            input.focus();
+        }
     });
 }
