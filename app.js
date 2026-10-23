@@ -57,7 +57,13 @@ const LISTA_INTENDENTES = [
     { valor: "JESUS", nombre: "Jesus" },
     { valor: "GABRIELA", nombre: "Gabriela" },
     { valor: "CYNTHIA", nombre: "Cynthia" },
-    { valor: "ENRIQUE", nombre: "Enrique" }
+    { valor: "ENRIQUE", nombre: "Enrique" },
+    { valor: "NORMA", nombre: "Norma" },
+    { valor: "EVA", nombre: "Eva" },
+    { valor: "SUSANA", nombre: "Susana" },
+    { valor: "GERARDO", nombre: "Gerardo" },
+    { valor: "ISMAEL", nombre: "Ismael" },
+    { valor: "SOTERO", nombre: "Sotero" }
 ];
 
 // Lista de Tiempos Completos guardada en la hoja de Excel 'tiempos completos'
