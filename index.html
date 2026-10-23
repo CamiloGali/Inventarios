@@ -199,7 +199,7 @@
                                     </label>
                                     <span id="badgeTipoEmpleado"
                                         class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
-                                        Intendente (11)
+                                        Intendente (17)
                                     </span>
                                 </div>
                                 <div class="relative">
@@ -276,13 +276,22 @@
                                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <p class="text-xs text-emerald-800 leading-relaxed font-medium">
-                            Selecciona el producto y la cantidad de piezas recibidas. Se sumarán directamente en la
-                            <strong>Celda E</strong> de la hoja <strong>INVENTARIO</strong>.
+                            Registra el ingreso de material al almacén. Se guardará en la tabla <strong>ENTRADAS</strong> y se sumará automáticamente al stock registrado en <strong>INVENTARIO</strong>.
                         </p>
                     </div>
 
                     <form id="entradaForm" class="space-y-4">
-                        <!-- Fila: Descripción y Código -->
+                        <!-- Fila 1: Fecha de Entrada -->
+                        <div>
+                            <label for="entradaFecha"
+                                class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+                                Fecha de Entrada
+                            </label>
+                            <input type="date" id="entradaFecha" name="fecha" required
+                                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-sm font-medium focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none transition-all shadow-2xs">
+                        </div>
+
+                        <!-- Fila 2: Descripción y Código -->
                         <div class="grid grid-cols-1 sm:grid-cols-12 gap-4">
                             <div class="sm:col-span-8">
                                 <label for="entradaDescripcion"
@@ -311,15 +320,26 @@
                             </div>
                         </div>
 
-                        <!-- Fila: Piezas de Entrada -->
+                        <!-- Fila 3: Cantidad / Piezas de Entrada -->
                         <div>
                             <label for="entradaPiezas"
                                 class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
-                                Piezas que Entran
+                                Cantidad que Entra (Piezas) *
                             </label>
-                            <input type="number" id="entradaPiezas" name="piezas" required min="1" step="1"
+                            <input type="number" id="entradaPiezas" name="cantidad" required min="1" step="1"
                                 placeholder="Ej: 10"
                                 class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-sm font-medium focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none transition-all shadow-2xs">
+                        </div>
+
+                        <!-- Fila 4: Observaciones -->
+                        <div>
+                            <label for="entradaObservaciones"
+                                class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+                                Observaciones <span class="text-slate-400 font-normal lowercase">(opcional)</span>
+                            </label>
+                            <textarea id="entradaObservaciones" name="observaciones" rows="2"
+                                placeholder="Proveedor, factura, detalles de entrega o notas adicionales..."
+                                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none transition-all shadow-2xs resize-none"></textarea>
                         </div>
 
                         <!-- Botón Enviar Entrada -->
@@ -431,13 +451,41 @@
                 <!-- PESTAÑA 2: MODIFICAR PRODUCTO -->
                 <div id="tab-modificar" class="tab-content space-y-4 hidden">
                     <div>
-                        <label for="selectEdit"
-                            class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Seleccionar
-                            Producto a Editar</label>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label for="selectEdit"
+                                class="block text-xs font-bold text-slate-600 uppercase tracking-wider">Seleccionar
+                                Producto a Editar</label>
+                            <span id="badgeFiltroEdit"
+                                class="hidden text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded-full">
+                                0 / 0
+                            </span>
+                        </div>
+
+                        <!-- Filtro de búsqueda rápida -->
+                        <div class="relative mb-2">
+                            <input type="text" id="filtroModificar"
+                                placeholder="Filtrar por código o descripción..." autocomplete="off"
+                                class="w-full pl-8 pr-8 py-2 text-xs rounded-xl border border-slate-200 bg-slate-50 text-slate-800 placeholder-slate-400 focus:bg-white focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 focus:outline-none transition-all shadow-2xs">
+                            <svg class="h-3.5 w-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            <button type="button" id="btnLimpiarFiltroEdit" title="Limpiar filtro"
+                                class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 rounded-full hover:bg-slate-200/60 transition-colors cursor-pointer border-0 bg-transparent">
+                                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+
                         <select id="selectEdit"
                             class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-sm font-medium focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 focus:outline-none transition-all shadow-2xs cursor-pointer">
                             <!-- Se llena con JS -->
                         </select>
+                    </div>
+
                     <div>
                         <label for="editCodigo"
                             class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Código
@@ -498,9 +546,35 @@
                     </div>
 
                     <div>
-                        <label for="selectDel"
-                            class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Seleccionar
-                            Producto a Eliminar</label>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label for="selectDel"
+                                class="block text-xs font-bold text-slate-600 uppercase tracking-wider">Seleccionar
+                                Producto a Eliminar</label>
+                            <span id="badgeFiltroDel"
+                                class="hidden text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200/80 px-2 py-0.5 rounded-full">
+                                0 / 0
+                            </span>
+                        </div>
+
+                        <!-- Filtro de búsqueda rápida -->
+                        <div class="relative mb-2">
+                            <input type="text" id="filtroEliminar"
+                                placeholder="Filtrar por código o descripción..." autocomplete="off"
+                                class="w-full pl-8 pr-8 py-2 text-xs rounded-xl border border-slate-200 bg-slate-50 text-slate-800 placeholder-slate-400 focus:bg-white focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 focus:outline-none transition-all shadow-2xs">
+                            <svg class="h-3.5 w-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            <button type="button" id="btnLimpiarFiltroDel" title="Limpiar filtro"
+                                class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 rounded-full hover:bg-slate-200/60 transition-colors cursor-pointer border-0 bg-transparent">
+                                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+
                         <select id="selectDel"
                             class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-sm font-medium focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 focus:outline-none transition-all shadow-2xs cursor-pointer">
                             <!-- Se llena con JS -->
@@ -599,7 +673,6 @@
     </div>
 
     <!-- Script de la aplicación -->
-    <script src="app.js?v=2.1"></script>
+    <script src="app.js?v=2.2"></script>
 </body>
-
 </html>
